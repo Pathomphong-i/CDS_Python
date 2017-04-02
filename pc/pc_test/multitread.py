@@ -2,29 +2,47 @@ import threading
 import time
 import Queue
 
-VAR = 0 
+def test2():
 
-def increase():
+	time.sleep(3)
 
-	while True: 
-		time.sleep(0.5)
-		global VAR 
-		VAR = VAR+1 
+def test1():
+	threading.Thread(target=test2).start()
+	print threading.enumerate()
 
-def show():
+	time.sleep(3)
+
+class EC(threading.Thread):
+	"""docstring for ClassName"""	
+	def __init__(self, name):
+		threading.Thread.__init__(self)
+		self.name = name			
+	def run(self):
+		time.sleep(3)
+
+def cmd():
 	while True:
-		time.sleep(1)
-		global VAR
-		print VAR
+		inp = raw_input("_>")
+		if inp == "go" :
+			e.set()
+		elif inp == "wait" :
+			e.clear()
 
+def testEvent(e):
+
+	while True:
+		e.wait()
+		time.sleep(0.5)
+		print "Here"
+		
 if __name__ == '__main__':
-	
-	inc = threading.Thread(target=increase)
-	shw = threading.Thread(target=show )
 
-	try:
-		inc.start()
-		shw.start()
-	except KeyboardInterrupt as e:
-		inc.exit()
-		shw.exit()
+	e = threading.Event()
+
+	t = threading.Thread(target=testEvent, args=(e,) )
+	t.start()
+
+	t2 = threading.Thread(target=cmd)
+	t2.start()
+
+
